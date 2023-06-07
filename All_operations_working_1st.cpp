@@ -58,8 +58,6 @@ public:
 
         }
 
-        // Fill in trailing zeros
-
         while (digits.size() < decimalPoint + maxDecimalPlaces) {
 
             digits.push_back(0);
@@ -73,8 +71,6 @@ public:
     BigNumber operator+(const BigNumber& other) const {
 
         if (isNegative != other.isNegative) {
-
-            // If the signs are different, perform subtraction
 
             return isNegative ? other.subtract(*this) : subtract(other);
 
@@ -106,15 +102,11 @@ public:
 
         if (isNegative != other.isNegative) {
 
-            // If the signs are different, perform addition
-
             return operator+(-other);
 
         }
 
         if (isNegative && other.isNegative) {
-
-            // Subtracting a negative number is equivalent to adding the absolute values
 
             return other.subtract(*this);
 
@@ -122,15 +114,11 @@ public:
 
         if (isNegative && !other.isNegative) {
 
-            // Subtracting a positive number from a negative number
-
             return operator+(-other);
 
         }
 
         if (!isNegative && other.isNegative) {
-
-            // Subtracting a negative number from a positive number
 
             return operator+(-other);
 
@@ -154,19 +142,17 @@ public:
 
         if (isNegative && !other.isNegative) {
 
-            return true;  // Negative numbers are less than positive numbers
+            return true;
 
         }
 
         if (!isNegative && other.isNegative) {
 
-            return false;  // Positive numbers are greater than negative numbers
+            return false;
 
         }
 
         if (isNegative && other.isNegative) {
-
-            // Comparing absolute values, but in reverse order since negative numbers are smaller
 
             return compareAbsoluteValue(other) > 0;
 
@@ -224,10 +210,6 @@ public:
 
         divisor.isNegative = false;
 
-
-
-        // Shift dividend and divisor left by the number of decimal places of the divisor
-
         int shift = other.decimalPoint;
 
         for(int i = 0; i < shift; i++){
@@ -266,21 +248,17 @@ public:
 
         quotient.removeLeadingZeros();
 
-        // Adjust the decimal point position immediately after division
-
         quotient.decimalPoint = quotient.digits.size() - decimalPoint + other.decimalPoint - shift;
 
-        // Rounding
+        if (quotient.getDigit(-precision - 1) >= 5) {
 
-        if (quotient.getDigit(-precision - 1) >= 5) {  // Check the next digit after precision
-
-            BigNumber round("1" + std::string(precision - 1, '0'));  // Fixed the rounding issue here
+            BigNumber round("1" + std::string(precision - 1, '0'));
 
             quotient = quotient + round;
 
         }
 
-        while(quotient.digits.back() == 0 && quotient.decimalPoint > 1){  // To remove leading zeros
+        while(quotient.digits.back() == 0 && quotient.decimalPoint > 1){
 
             quotient.digits.pop_back();
 
@@ -443,8 +421,6 @@ private:
         }
 
         if (digits.empty()) {
-
-            // If all digits were zeros, add a single zero back
 
             digits.push_back(0);
 
